@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project A — Audizioni Next Girl Group</title>
+<meta name="description" content="Candidati per il nuovo gruppo globale: canto, ballo, all rounder. Trap, hip hop, R&B, Y2K.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Archivo+Black&family=Space+Grotesk:wght@400;600&display=swap">
+<style>
+  :root {
+    --background: oklch(0.97 0.025 350);
+    --foreground: oklch(0.42 0.17 350);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.69 0.22 350);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.84 0.12 345);
+    --muted: oklch(0.92 0.06 345);
+    --muted-foreground: oklch(0.58 0.15 350);
+    --accent: oklch(0.88 0.09 345);
+    --border: oklch(0.69 0.22 350);
+  }
+
+  * { box-sizing: border-box; border-color: var(--border); }
+
+  body {
+    margin: 0;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.05rem;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 10% 10%, color-mix(in oklab, var(--secondary) 55%, transparent), transparent),
+      radial-gradient(ellipse 50% 40% at 90% 60%, color-mix(in oklab, var(--accent) 60%, transparent), transparent);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3 { font-family: "Shrikhand", serif; font-weight: 400; }
+  button, .pix { font-family: "Archivo Black", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .pixel-box {
+    position: relative;
+    background: color-mix(in oklab, var(--card) 85%, transparent);
+    border: 2px solid var(--secondary);
+    border-radius: 2rem;
+    box-shadow: 0 20px 50px -20px color-mix(in oklab, var(--primary) 50%, transparent);
+    overflow: hidden;
+  }
+  .pixel-btn {
+    font-family: "Archivo Black", sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: 999px;
+    padding: 0.95rem 1.6rem;
+    font-size: 0.8rem;
+    box-shadow: 0 10px 25px -8px var(--primary);
+    transition: transform .2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .pixel-btn:hover { transform: translateY(-2px) scale(1.02); }
+  .pixel-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .win-bar {
+    font-family: "Shrikhand", serif;
+    color: var(--primary);
+    font-size: 1.4rem;
+    padding: 1.2rem 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .glow-text { text-shadow: 0 0 20px color-mix(in oklab, var(--primary) 50%, transparent); }
+  .blink { animation: blink 1.6s ease-in-out infinite; }
+  .marquee { animation: marquee 18s linear infinite; }
+  .chip {
+    border-radius: 999px;
+    border: 2px solid var(--secondary);
+    background: var(--card);
+    padding: 0.25rem 1rem;
+  }
+  @keyframes blink { 50% { opacity: .35; } }
+  @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+  .input {
+    width: 100%;
+    border-radius: 1rem;
+    border: 2px solid var(--secondary);
+    background: var(--background);
+    color: var(--foreground);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+  }
+  .input:focus { border-color: var(--primary); }
+
+  .pick {
+    border-radius: 999px;
+    border: 2px solid var(--secondary);
+    background: var(--background);
+    color: var(--foreground);
+    padding: 0.75rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+  .pick.on { background: var(--primary); color: var(--primary-foreground); }
+  .pick.extra { padding: 0.5rem 1rem; }
+  .pick.extra.on { background: var(--accent); color: var(--foreground); }
+
+  .modal-bg {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in oklab, var(--foreground) 40%, transparent);
+    padding: 1rem;
+  }
+  .hidden { display: none !important; }
+
+  main { max-width: 48rem; margin: 0 auto; padding: 2rem 1rem; display: flex; flex-direction: column; gap: 2.5rem; }
+  .marquee-bar { overflow: hidden; border-radius: 999px; background: var(--primary); padding: 0.5rem 0; color: var(--primary-foreground); font-size: 0.75rem; }
+  .marquee-bar p { margin: 0; white-space: nowrap; }
+  header { text-align: center; }
+  header .logo { width: 100%; max-width: 36rem; margin: 0 auto; display: block; }
+  .grid2 { display: grid; gap: 1rem; }
+  @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } .grid3 { grid-template-columns: repeat(3, 1fr); } }
+  .grid3 { display: grid; gap: 0.5rem; grid-template-columns: repeat(3, 1fr); }
+  .step { border-radius: 1.5rem; background: var(--muted); padding: 1.25rem; }
+  .step h3 { margin: 0.25rem 0 0; font-size: 1.25rem; color: var(--primary); }
+  .step p { margin: 0.5rem 0 0; line-height: 1.2; }
+  .step .num { margin: 0; font-size: 0.75rem; color: var(--muted-foreground); }
+  form { display: flex; flex-direction: column; gap: 1.25rem; }
+  label.pix { font-size: 0.75rem; display: block; }
+  .extras-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .chips-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .pad { padding: 1.25rem; }
+  footer { text-align: center; font-size: 0.75rem; color: var(--muted-foreground); padding-bottom: 1.5rem; }
+  .center { text-align: center; }
+  .muted { color: var(--muted-foreground); }
+  .err { text-align: center; color: #c2255c; }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="marquee-bar pix">
+    <p class="marquee">★ AUDIZIONI APERTE ★ PROJECT A ★ NEXT GIRL GROUP ★ TRAP · HIP HOP · R&amp;B ★ Y2K STREETWEAR ★ STAR QUALITY REQUIRED ★</p>
+  </div>
+
+  <header>
+    <p class="pix muted" style="font-size:0.75rem; margin:0;">✦ audizioni aperte ✦</p>
+    <img src="project-a-logo.png" alt="Project A — Next Girl Group" class="logo" />
+    <p style="font-size:1.5rem; margin:1rem 0 0;">Project A cerca la prossima star. Da ovunque nel mondo.</p>
+    <button type="button" id="starBtn" class="blink pix" style="margin-top:1rem; font-size:0.75rem; background:none; border:none; color:inherit; text-decoration:underline dotted; text-underline-offset:4px; cursor:pointer;">▶ STAR QUALITY RICHIESTA ◀</button>
+    <br>
+    <a href="#candidati" class="pixel-btn" style="margin-top:1.5rem;">CANDIDATI ORA</a>
+  </header>
+
+  <section class="pixel-box">
+    <div class="win-bar"><span>✦</span><span>la vibe</span></div>
+    <div class="pad">
+      <div class="chips-wrap">
+        <span class="chip">Trap</span>
+        <span class="chip">Hip Hop</span>
+        <span class="chip">R&amp;B</span>
+        <span class="chip">Streetwear</span>
+        <span class="chip">Y2K fits</span>
+        <span class="chip">Y2K makeup</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="pixel-box">
+    <div class="win-bar"><span>✦</span><span>il processo</span></div>
+    <div class="pad">
+      <ol class="grid2" style="list-style:none; margin:0; padding:0;">
+        <li class="step"><p class="num pix">01</p><h3>Audizione online</h3><p>Invia la tua candidatura e i video qui sotto.</p></li>
+        <li class="step"><p class="num pix">02</p><h3>Chiamata</h3><p>Se passi, ti contattiamo per una video call.</p></li>
+        <li class="step"><p class="num pix">03</p><h3>Prove</h3><p>Con il gruppo formato: 1–2 giorni di prove insieme.</p></li>
+        <li class="step"><p class="num pix">04</p><h3>Reveal</h3><p>Riveliamo i membri ufficiali. Io sono una di loro ♥</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <div id="candidati">
+    <section class="pixel-box">
+      <div class="win-bar"><span>✦</span><span>candidati</span></div>
+      <div class="pad">
+        <form id="applyForm">
+          <div class="grid2">
+            <input required class="input" name="name" placeholder="Nome d'arte / nome">
+            <input required type="number" min="14" class="input" name="age" placeholder="Età">
+            <input required class="input" name="location" placeholder="Paese / città">
+            <input required type="email" class="input" name="email" placeholder="Email">
+            <input class="input" name="socials" placeholder="Instagram / TikTok">
+            <input class="input" name="languages" placeholder="Lingue parlate">
+          </div>
+
+          <div>
+            <label class="pix">RUOLO *</label>
+            <div class="grid3" style="margin-top:0.75rem;">
+              <button type="button" class="pick pix" data-role="Canto">Canto</button>
+              <button type="button" class="pick pix" data-role="Ballo">Ballo</button>
+              <button type="button" class="pick pix" data-role="All Rounder">All Rounder</button>
+            </div>
+          </div>
+
+          <input required type="url" class="input" name="video_url" placeholder="Link video audizione (YouTube, Drive...)">
+
+          <div>
+            <label class="pix">ALTRI TALENTI</label>
+            <div class="extras-wrap" id="extras">
+              <button type="button" class="pick extra" data-extra="Produzione basi">☐ Produzione basi</button>
+              <button type="button" class="pick extra" data-extra="Songwriting">☐ Songwriting</button>
+              <button type="button" class="pick extra" data-extra="Coreografia">☐ Coreografia</button>
+              <button type="button" class="pick extra" data-extra="Rap">☐ Rap</button>
+              <button type="button" class="pick extra" data-extra="Styling / Makeup">☐ Styling / Makeup</button>
+              <button type="button" class="pick extra" data-extra="Altro">☐ Altro</button>
+            </div>
+            <input type="url" class="input hidden" id="extraLink" name="extra_link" placeholder="Link a basi / testi / coreografie" style="margin-top:0.75rem;">
+          </div>
+
+          <textarea required rows="4" class="input" name="why_star" placeholder="Cosa ti rende una star? ✨"></textarea>
+
+          <p class="err hidden" id="formErr">Ops, qualcosa non va. Controlla i campi e riprova.</p>
+          <button type="submit" id="submitBtn" class="pixel-btn" style="width:100%;" disabled>SCEGLI UN RUOLO</button>
+          <p class="muted center" style="font-size:0.8rem; margin:0;">L'invio apre la tua app di posta con la candidatura già compilata, da mandare a ggprojecta.00@gmail.com</p>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <div id="starModal" class="modal-bg hidden">
+    <div class="pixel-box center" style="max-width:28rem; background:var(--card); padding:1.5rem;">
+      <h2 style="font-size:1.9rem; color:var(--primary); margin:0;">✦ Star Quality ✦</h2>
+      <p style="margin:1rem 0 0;">È quel qualcosa in più che non si insegna: quando entri in scena, tutti ti guardano.</p>
+      <ul style="margin:1rem 0 0; padding-left:1.25rem; text-align:left; line-height:1.8;">
+        <li>✦ Presenza scenica e carisma</li>
+        <li>✦ Sicurezza davanti alla camera</li>
+        <li>✦ Uno stile e una personalità unici</li>
+        <li>✦ Energia che arriva anche attraverso uno schermo</li>
+      </ul>
+      <button type="button" id="starClose" class="pixel-btn" style="margin-top:1.5rem;">HO CAPITO ♥</button>
+    </div>
+  </div>
+
+  <footer class="pix">© 2026 Project A · next girl group ✦</footer>
+</main>
+
+<script>
+  // Pop-up "Star Quality"
+  var starModal = document.getElementById('starModal');
+  document.getElementById('starBtn').addEventListener('click', function () { starModal.classList.remove('hidden'); });
+  document.getElementById('starClose').addEventListener('click', function () { starModal.classList.add('hidden'); });
+  starModal.addEventListener('click', function (e) { if (e.target === starModal) starModal.classList.add('hidden'); });
+
+  // Scelta del ruolo
+  var role = '';
+  var submitBtn = document.getElementById('submitBtn');
+  document.querySelectorAll('[data-role]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      role = btn.getAttribute('data-role');
+      document.querySelectorAll('[data-role]').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'INVIA CANDIDATURA';
+    });
+  });
+
+  // Altri talenti (selezione multipla)
+  var extras = [];
+  var extraLink = document.getElementById('extraLink');
+  document.querySelectorAll('[data-extra]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var val = btn.getAttribute('data-extra');
+      var i = extras.indexOf(val);
+      if (i >= 0) { extras.splice(i, 1); btn.classList.remove('on'); btn.textContent = '☐ ' + val; }
+      else { extras.push(val); btn.classList.add('on'); btn.textContent = '☑ ' + val; }
+      extraLink.classList.toggle('hidden', extras.length === 0);
+    });
+  });
+
+  // Invio: apre la mail precompilata verso ggprojecta.00@gmail.com
+  document.getElementById('applyForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!role) { document.getElementById('formErr').classList.remove('hidden'); return; }
+    var f = new FormData(e.target);
+    var lines = [
+      'Nome: ' + f.get('name'),
+      'Età: ' + f.get('age'),
+      'Paese / città: ' + f.get('location'),
+      'Email: ' + f.get('email'),
+      'Social: ' + (f.get('socials') || '-'),
+      'Lingue: ' + (f.get('languages') || '-'),
+      'Ruolo: ' + role,
+      'Video audizione: ' + f.get('video_url'),
+      'Altri talenti: ' + (extras.length ? extras.join(', ') : '-'),
+      'Link extra: ' + (f.get('extra_link') || '-'),
+      '',
+      'Cosa mi rende una star:',
+      f.get('why_star')
+    ];
+    var subject = encodeURIComponent('Candidatura Project A — ' + f.get('name') + ' (' + role + ')');
+    var body = encodeURIComponent(lines.join('\n'));
+    window.location.href = 'mailto:ggprojecta.00@gmail.com?subject=' + subject + '&body=' + body;
+  });
+</script>
+</body>
+          </html>
